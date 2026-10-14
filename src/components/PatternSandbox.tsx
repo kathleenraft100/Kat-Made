@@ -147,7 +147,7 @@ Background: ${bgTheme}`;
                         alt={item.title}
                         watermarkDensity="subtle"
                         badgePosition="none"
-                        className="w-full h-full"
+                        className="absolute inset-0 w-full h-full"
                         imgClassName="w-full h-full object-cover"
                       />
                     </div>

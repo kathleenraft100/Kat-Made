@@ -142,7 +142,7 @@ export default function PatternManagerModal({
                       alt={sp.title}
                       watermarkDensity="subtle"
                       badgePosition="none"
-                      className="w-full h-full"
+                      className="absolute inset-0 w-full h-full"
                       imgClassName="w-full h-full object-cover"
                     />
                     <span className="absolute top-1 left-1 bg-[#d8ff43] text-[#070707] font-mono text-[9px] font-bold px-1 py-0.2 z-20">

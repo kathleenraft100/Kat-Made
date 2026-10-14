@@ -100,18 +100,34 @@ export async function getAllStoredPatterns(): Promise<Record<string, string>> {
 }
 
 /**
- * Attempts to push the pattern to the server disk storage
+ * Fetches all saved pattern URLs from the server disk storage
  */
-export async function syncPatternToServer(specimenId: string, dataUrl: string): Promise<boolean> {
+export async function fetchServerPatterns(): Promise<Record<string, string>> {
+  try {
+    const res = await fetch("/api/patterns");
+    if (!res.ok) return {};
+    const data = await res.json();
+    return data.patterns || {};
+  } catch (err) {
+    return {};
+  }
+}
+
+/**
+ * Attempts to push the pattern to the server disk storage and returns the public url
+ */
+export async function syncPatternToServer(specimenId: string, dataUrl: string): Promise<string | null> {
   try {
     const res = await fetch("/api/save-pattern", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ specimenId, dataUrl }),
     });
-    return res.ok;
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.url || null;
   } catch (err) {
     console.log("[PatternStorage] Server sync note (local fallback active)");
-    return false;
+    return null;
   }
 }

@@ -18,7 +18,7 @@ import AccountDrawer from "./components/AccountDrawer";
 import HypnoWaveBackground from "./components/HypnoWaveBackground";
 import { SPECIMENS } from "./data/patterns";
 import { PatternSpecimen } from "./types";
-import { getAllStoredPatterns, savePatternLocally, syncPatternToServer } from "./utils/patternStorage";
+import { fetchServerPatterns, getAllStoredPatterns, savePatternLocally, syncPatternToServer } from "./utils/patternStorage";
 
 export default function App() {
   const [specimensList, setSpecimensList] = useState<PatternSpecimen[]>(SPECIMENS);
@@ -31,15 +31,25 @@ export default function App() {
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("specimens");
 
-  // On initial mount, restore any locked/saved patterns from IndexedDB
+  // On initial mount, restore any locked/saved patterns from server disk AND IndexedDB
   useEffect(() => {
-    getAllStoredPatterns().then((savedMap) => {
-      if (Object.keys(savedMap).length > 0) {
-        setSpecimensList((prev) =>
-          prev.map((s) => (savedMap[s.id] ? { ...s, imageUrl: savedMap[s.id] } : s))
-        );
+    async function loadPatterns() {
+      try {
+        const [serverPatterns, localPatterns] = await Promise.all([
+          fetchServerPatterns(),
+          getAllStoredPatterns(),
+        ]);
+        const combined = { ...serverPatterns, ...localPatterns };
+        if (Object.keys(combined).length > 0) {
+          setSpecimensList((prev) =>
+            prev.map((s) => (combined[s.id] ? { ...s, imageUrl: combined[s.id] } : s))
+          );
+        }
+      } catch (err) {
+        console.warn("Error loading persisted patterns", err);
       }
-    });
+    }
+    loadPatterns();
   }, []);
 
   const heroSpecimen = specimensList[0] || SPECIMENS[0];
@@ -60,7 +70,12 @@ export default function App() {
     await savePatternLocally(specimenId, newImageUrl);
 
     // 3. Sync to server disk endpoint (/public/patterns)
-    await syncPatternToServer(specimenId, newImageUrl);
+    const serverUrl = await syncPatternToServer(specimenId, newImageUrl);
+    if (serverUrl) {
+      setSpecimensList((prev) =>
+        prev.map((s) => (s.id === specimenId ? { ...s, imageUrl: serverUrl } : s))
+      );
+    }
   };
 
   const handleOpenInquiry = (notes = "") => {

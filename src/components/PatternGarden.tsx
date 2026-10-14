@@ -115,7 +115,7 @@ export default function PatternGarden({
                   watermarkDensity="subtle"
                   badgePosition="bottom-right"
                   imgClassName="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  className="w-full h-full"
+                  className="absolute inset-0 w-full h-full"
                 />
 
                 {/* Number Badge */}
@@ -129,7 +129,7 @@ export default function PatternGarden({
                 </div>
 
                 {/* Hover overlay with action buttons */}
-                <div className="absolute inset-0 bg-[#070707]/75 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4 z-25">
+                <div className="absolute inset-0 bg-[#070707]/75 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4 z-30">
                   <button
                     onClick={() => onSelectSpecimen(specimen)}
                     className="w-full max-w-[200px] py-2.5 bg-[#d8ff43] text-[#070707] font-sans-grotesk font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0_#ff67bd]"

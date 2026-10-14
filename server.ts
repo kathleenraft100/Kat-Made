@@ -18,13 +18,39 @@ const isProduction = process.env.NODE_ENV === 'production';
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
-// Static pattern uploads directory
+// Static pattern uploads and assets directories
+const publicDir = path.resolve(__dirname, 'public');
 const publicPatternsDir = path.resolve(__dirname, 'public', 'patterns');
+const assetsImagesDir = path.resolve(__dirname, 'src', 'assets', 'images');
+
 if (!fs.existsSync(publicPatternsDir)) {
   fs.mkdirSync(publicPatternsDir, { recursive: true });
 }
 
-// 1. Endpoint: Save pattern image
+// Serve patterns and static images directly
+app.use('/patterns', express.static(publicPatternsDir));
+app.use('/src/assets/images', express.static(assetsImagesDir));
+app.use('/images', express.static(path.resolve(publicDir, 'images')));
+app.use(express.static(publicDir));
+
+// 1. Endpoint: Get all saved/registered patterns from server disk
+app.get('/api/patterns', (_req, res) => {
+  try {
+    const files = fs.readdirSync(publicPatternsDir);
+    const patternMap: Record<string, string> = {};
+    for (const file of files) {
+      const match = file.match(/^(\d{2}-[a-z0-9-]+)\.(png|jpg|jpeg|webp)$/i);
+      if (match) {
+        patternMap[match[1]] = `/patterns/${file}`;
+      }
+    }
+    return res.json({ patterns: patternMap });
+  } catch (err) {
+    return res.json({ patterns: {} });
+  }
+});
+
+// 2. Endpoint: Save pattern image
 app.post('/api/save-pattern', (req, res) => {
   try {
     const { specimenId, dataUrl } = req.body;
@@ -43,8 +69,18 @@ app.post('/api/save-pattern', (req, res) => {
     const targetPath = path.join(publicPatternsDir, fileName);
 
     fs.writeFileSync(targetPath, buffer);
-    const publicUrl = `/patterns/${fileName}`;
 
+    // Also mirror to dist if exists
+    const distPatternsDir = path.resolve(__dirname, 'dist', 'patterns');
+    if (fs.existsSync(distPatternsDir)) {
+      try {
+        fs.writeFileSync(path.join(distPatternsDir, fileName), buffer);
+      } catch (e) {
+        // non-blocking
+      }
+    }
+
+    const publicUrl = `/patterns/${fileName}`;
     return res.json({ success: true, url: publicUrl });
   } catch (error) {
     console.error('[API /api/save-pattern] Error saving pattern file:', error);

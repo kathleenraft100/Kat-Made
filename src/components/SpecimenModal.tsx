@@ -151,7 +151,7 @@ export default function SpecimenModal({
                     specimenNumber={specimen.number}
                     watermarkDensity="subtle"
                     badgePosition="bottom-right"
-                    className="w-full h-full"
+                    className="absolute inset-0 w-full h-full"
                     imgClassName="w-full h-full object-cover transition-all duration-300"
                     imgStyle={{ filter: activeColorway.filterCss }}
                   />

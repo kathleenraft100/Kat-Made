@@ -10,7 +10,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "hero",
     categoryLabel: "Hero Statement",
     description: "Black-led bio-surreal garden of large flowers, mushrooms, tendrils, liquid chrome contours, optical vortexes, and subtle warped checkerboard fragments; electric magenta, cyan, violet, chartreuse, saffron, and green on obsidian black; tactile screenprint maximalism; edge-aware seamless square repeat.",
-    imageUrl: "/src/assets/images/hero_acid_orchid_chrome_1791955071461.jpg",
+    imageUrl: "/patterns/01-chrome-garden-vortex.jpg",
     hexColors: ["#ff67bd", "#30E6FF", "#9A5CFF", "#d8ff43", "#ffad58", "#050505"],
     colorways: [
       { name: "Obsidian First-Render", filterCss: "none", bgHex: "#050505" },
@@ -37,7 +37,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "hero",
     categoryLabel: "Hero Statement",
     description: "Black-ground all-over pattern of distributed organic portals, warped oval membranes, liquid rainbow loops, optical tunnels, botanical fragments, checkerboard arcs, and iridescent chrome gradient mesh; high-contrast psychedelic surface design; edge-aware seamless square repeat.",
-    imageUrl: "/src/assets/images/pattern_neo_lotus_cyan_1791955071088.jpg",
+    imageUrl: "/patterns/02-prismatic-portal.jpg",
     hexColors: ["#30E6FF", "#9A5CFF", "#ff67bd", "#17191F", "#d8ff43"],
     colorways: [
       { name: "Prismatic Original", filterCss: "none", bgHex: "#060913" },
@@ -64,7 +64,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "secondary",
     categoryLabel: "Secondary Tunnel",
     description: "High-contrast black-and-white warped checkerboard tunnels, curved grids, spiraling checker fragments, petal openings, and optical vortex distortions with selective magenta, cyan, pink, ultraviolet, saffron, chartreuse, and prismatic chrome; tactile screenprint; edge-aware seamless square repeat.",
-    imageUrl: "/src/assets/images/pattern_venus_chrome_trap_1791955072106.jpg",
+    imageUrl: "/patterns/03-checker-bloom-tunnel.jpg",
     hexColors: ["#F3F0E8", "#050505", "#ff67bd", "#30E6FF", "#d8ff43"],
     colorways: [
       { name: "Warped Optical", filterCss: "none", bgHex: "#111217" },
@@ -91,7 +91,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "secondary",
     categoryLabel: "Secondary Mesh",
     description: "Black-ground interweaving liquid tendrils, translucent organic ribbons, chrome-edged loops, bio-organic mesh, petal fragments, tiny checker arcs, and flowing cyan, turquoise, violet, magenta, cobalt, saffron, and chartreuse gradients; open black negative space; edge-aware seamless square repeat.",
-    imageUrl: "/src/assets/images/pattern_prismatic_chrysanthemum_1791956564862.jpg",
+    imageUrl: "/patterns/04-iridescent-tendril-mesh.jpg",
     hexColors: ["#30E6FF", "#9A5CFF", "#ff67bd", "#d8ff43", "#ffad58"],
     colorways: [
       { name: "Prismatic Flow", filterCss: "none", bgHex: "#080b18" },
@@ -118,7 +118,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "secondary",
     categoryLabel: "Secondary Bio-Surreal",
     description: "Deep plum-black dreamcore bio-surreal ecosystem of luminous fungi, translucent petals, glowing spores, impossible leaves, tendrils, seed apertures, eye-like organic forms, quiet checker fragments, and selective iridescent highlights; tactile screenprint; edge-aware seamless square repeat.",
-    imageUrl: "/src/assets/images/pattern_ghost_monstera_1791956565995.jpg",
+    imageUrl: "/patterns/05-dreamcore-fungi-field.jpg",
     hexColors: ["#ff67bd", "#30E6FF", "#9A5CFF", "#adb2bd", "#050505"],
     colorways: [
       { name: "Plum Dreamcore", filterCss: "none", bgHex: "#0e0514" },
@@ -145,7 +145,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "blender",
     categoryLabel: "Blender Ribbon",
     description: "Restrained seamless blender of flowing deep emerald and acid-green organic ribbon shapes, hand-drawn wavy contours, nested optical ripples, and black-and-white checkerboard fragments transformed into small rainbow optical illusions; warm cream-to-charcoal ground; low-density tactile screenprint.",
-    imageUrl: "/src/assets/images/pattern_subzero_fern_1791956564902.jpg",
+    imageUrl: "/patterns/06-ripple.jpg",
     hexColors: ["#d8ff43", "#30E6FF", "#111217", "#F3F0E8"],
     colorways: [
       { name: "Emerald Ripple", filterCss: "none", bgHex: "#051009" },
@@ -172,7 +172,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "blender",
     categoryLabel: "Blender Seed",
     description: "Small-scale black-ground blender of irregular liquid pebbles, seed forms, tiny surreal flowers, miniature mushroom caps, curved green organic marks, and checkerboard optical fragments with rainbow iridescent interiors; tactile screenprint; varied edge-aware repeat.",
-    imageUrl: "/src/assets/images/pattern_solar_anemone_1791956565457.jpg",
+    imageUrl: "/patterns/07-chrome-pebble-signal.jpg",
     hexColors: ["#ffad58", "#d8ff43", "#30E6FF", "#050505"],
     colorways: [
       { name: "Iridescent Pebble", filterCss: "none", bgHex: "#050505" },
@@ -199,7 +199,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "blender",
     categoryLabel: "Blender Stripe",
     description: "Black-ground seamless textile stripe of broad flowing emerald and acid-green organic bands, sculptural liquid curves, black contours, checkerboard interruptions, and selected cyan, turquoise, magenta, ultraviolet, saffron, and chrome transitions; calm horizontal rhythm; edge-aware repeat.",
-    imageUrl: "/src/assets/images/hero_acid_orchid_chrome_1791955071461.jpg",
+    imageUrl: "/patterns/08-neon-wave-band.jpg",
     hexColors: ["#d8ff43", "#30E6FF", "#ff67bd", "#070707"],
     colorways: [
       { name: "Calm Emerald Stripe", filterCss: "none", bgHex: "#040d06" },
@@ -226,7 +226,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "wild-micro",
     categoryLabel: "Wild Card",
     description: "Bold psychedelic maximalist seamless pattern built around large surreal mushrooms, oversized expressive flowers, flowing emerald-green leaves, liquid tendrils, and multiple warped black-and-white checkerboard optical illusions with rainbow checkerboard vortexes; warm cream ground; saturated electric color; tactile screenprint.",
-    imageUrl: "/src/assets/images/pattern_venus_chrome_trap_1791955072106.jpg",
+    imageUrl: "/patterns/09-electric-mushroom.png",
     hexColors: ["#ff67bd", "#d8ff43", "#30E6FF", "#ffad58", "#F3F0E8"],
     colorways: [
       { name: "Maximalist Cream", filterCss: "none", bgHex: "#140a10" },
@@ -253,7 +253,7 @@ export const SPECIMENS: PatternSpecimen[] = [
     category: "wild-micro",
     categoryLabel: "Micro Print",
     description: "Small-scale warm-cream seamless pattern of tiny mushrooms, miniature expressive flowers, flowing green leaves, tiny organic portals, checkerboard fragments, rainbow optical illusions, droplets, stars, and delicate tendrils; varied imperfect spacing; tactile screenprint; recognizable at small physical scale.",
-    imageUrl: "/src/assets/images/pattern_neo_lotus_cyan_1791955071088.jpg",
+    imageUrl: "/patterns/10-tiny-portal-garden.png",
     hexColors: ["#F3F0E8", "#30E6FF", "#ff67bd", "#d8ff43", "#111217"],
     colorways: [
       { name: "Warm Cream Micro", filterCss: "none", bgHex: "#0c0d10" },
