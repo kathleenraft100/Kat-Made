@@ -1,0 +1,137 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny catch-all (Pillar 4 / Safety Net)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common hardened primitive helpers (Phase 3)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_-]+$');
+    }
+
+    // Entity Validation Blueprints (Pillar 2: Standalone validation helpers)
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'email', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'displayName', 'email', 'photoURL', 'createdAt', 'updatedAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.email is string && data.email.size() <= 254
+        && (!('displayName' in data) || data.displayName == null || (data.displayName is string && data.displayName.size() <= 250))
+        && (!('photoURL' in data) || data.photoURL == null || (data.photoURL is string && data.photoURL.size() <= 2048))
+        && data.createdAt is string && data.createdAt.size() <= 64
+        && data.updatedAt is string && data.updatedAt.size() <= 64;
+    }
+
+    function isValidFavorite(data) {
+      return data.keys().hasAll(['id', 'userId', 'patternId', 'patternName', 'createdAt'])
+        && data.keys().hasOnly(['id', 'userId', 'patternId', 'patternName', 'userNotes', 'createdAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.patternId is string && data.patternId.size() <= 64
+        && data.patternName is string && data.patternName.size() <= 120
+        && (!('userNotes' in data) || (data.userNotes is string && data.userNotes.size() <= 1000))
+        && data.createdAt is string && data.createdAt.size() <= 60;
+    }
+
+    function isValidInquiry(data) {
+      return data.keys().hasAll(['id', 'userId', 'userName', 'userEmail', 'message', 'status', 'createdAt'])
+        && data.keys().hasOnly(['id', 'userId', 'userName', 'userEmail', 'patternId', 'patternName', 'projectType', 'message', 'status', 'createdAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 100
+        && data.userEmail is string && data.userEmail.size() <= 120
+        && (!('patternId' in data) || (data.patternId is string && data.patternId.size() <= 64))
+        && (!('patternName' in data) || (data.patternName is string && data.patternName.size() <= 120))
+        && (!('projectType' in data) || (data.projectType is string && data.projectType.size() <= 80))
+        && data.message is string && data.message.size() <= 2000
+        && data.status is string && data.status.size() <= 30
+        && data.createdAt is string && data.createdAt.size() <= 60;
+    }
+
+    function isValidConversation(data) {
+      return data.keys().hasAll(['id', 'userId', 'title', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'userId', 'title', 'lastMessage', 'createdAt', 'updatedAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.title is string && data.title.size() <= 150
+        && (!('lastMessage' in data) || (data.lastMessage is string && data.lastMessage.size() <= 500))
+        && data.createdAt is string && data.createdAt.size() <= 60
+        && data.updatedAt is string && data.updatedAt.size() <= 60;
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['id', 'userId', 'conversationId', 'role', 'content', 'createdAt'])
+        && data.keys().hasOnly(['id', 'userId', 'conversationId', 'role', 'content', 'createdAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.conversationId is string && data.conversationId.size() <= 128
+        && (data.role == 'user' || data.role == 'assistant')
+        && data.content is string && data.content.size() <= 5000
+        && data.createdAt is string && data.createdAt.size() <= 60;
+    }
+
+    // 1. Users collection (PII Isolation: Only self can access)
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      allow create: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUser(incoming()) && incoming().id == userId;
+      allow update: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUser(incoming())
+                    && incoming().id == userId && incoming().id == existing().id;
+      allow delete: if false;
+
+      // 1.1 User Favorites subcollection
+      match /favorites/{favoriteId} {
+        allow get, list: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+        allow create: if isSignedIn() && isValidId(userId) && isValidId(favoriteId) && request.auth.uid == userId
+                      && isValidFavorite(incoming()) && incoming().userId == userId && incoming().id == favoriteId;
+        allow update: if isSignedIn() && isValidId(userId) && isValidId(favoriteId) && request.auth.uid == userId
+                      && isValidFavorite(incoming()) && incoming().userId == existing().userId && incoming().id == existing().id
+                      && incoming().createdAt == existing().createdAt;
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(favoriteId) && request.auth.uid == userId;
+      }
+
+      // 1.2 User Chat Conversations subcollection
+      match /conversations/{conversationId} {
+        allow get, list: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+        allow create: if isSignedIn() && isValidId(userId) && isValidId(conversationId) && request.auth.uid == userId
+                      && isValidConversation(incoming()) && incoming().userId == userId && incoming().id == conversationId;
+        allow update: if isSignedIn() && isValidId(userId) && isValidId(conversationId) && request.auth.uid == userId
+                      && isValidConversation(incoming()) && incoming().userId == existing().userId && incoming().id == existing().id
+                      && incoming().createdAt == existing().createdAt;
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(conversationId) && request.auth.uid == userId;
+
+        // 1.2.1 Messages in conversation
+        match /messages/{messageId} {
+          allow get, list: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+          allow create: if isSignedIn() && isValidId(userId) && isValidId(messageId) && request.auth.uid == userId
+                        && isValidMessage(incoming()) && incoming().userId == userId && incoming().conversationId == conversationId
+                        && incoming().id == messageId;
+          allow update, delete: if false;
+        }
+      }
+    }
+
+    // 2. Inquiries collection (Bespoke commissions & licensing inquiries)
+    match /inquiries/{inquiryId} {
+      allow get: if isSignedIn() && isValidId(inquiryId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(inquiryId) && isValidInquiry(incoming())
+                    && incoming().userId == request.auth.uid && incoming().id == inquiryId;
+      allow update, delete: if false;
+    }
+  }
+}

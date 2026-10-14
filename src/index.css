@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ink: #070707;
+    --night: #050505;
+    --charcoal: #111217;
+    --graphite: #17191F;
+    --paper: #F3F0E8;
+    --white: #f5f4ef;
+    --silver: #adb2bd;
+    --lime: #d8ff43;
+    --cyan: #30E6FF;
+    --pink: #ff67bd;
+    --violet: #9A5CFF;
+    --orange: #ffad58;
+    --line: rgba(245, 244, 239, 0.22);
+    --radius: 2px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--night);
+    color: var(--white);
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  button, a {
+    font: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: var(--lime);
+    color: var(--ink);
+  }
+
+  /* Prevent drag & saving on protected artwork */
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+.protected-artwork {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+.font-serif-display {
+  font-family: "Bodoni Moda", Georgia, serif;
+}
+
+.font-sans-grotesk {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+/* Custom interactive animation utilities */
+@keyframes rotate-ring {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(6deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 15px rgba(216, 255, 67, 0.3));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 35px rgba(255, 103, 189, 0.6));
+  }
+}
+
+.animate-rotate-ring {
+  animation: rotate-ring 32s linear infinite;
+}
+
+.animate-floaty {
+  animation: floaty 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Shimmer scanline effect on cards */
+.shimmer-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.shimmer-scan:hover::after {
+  transform: translateX(100%);
+}

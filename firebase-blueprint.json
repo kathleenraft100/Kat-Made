@@ -1,0 +1,229 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile data for authenticated clients",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique user identifier matching auth UID",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Full display name of user",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 120
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User profile avatar URL",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when account was first recorded"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when account was last updated"
+        }
+      },
+      "required": ["id", "email", "createdAt", "updatedAt"]
+    },
+    "PatternFavorite": {
+      "title": "PatternFavorite",
+      "description": "User favorited pattern specimen and custom notes",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of favorite record",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of user who favorited the pattern",
+          "maxLength": 128
+        },
+        "patternId": {
+          "type": "string",
+          "description": "ID of specimen (e.g. hypno-01)",
+          "maxLength": 64
+        },
+        "patternName": {
+          "type": "string",
+          "description": "Human readable specimen title",
+          "maxLength": 120
+        },
+        "userNotes": {
+          "type": "string",
+          "description": "Personal curation or project notes",
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["id", "userId", "patternId", "patternName", "createdAt"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Licensing or bespoke pattern commissions inquiry submitted to studio",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Inquiry unique ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of submitting user",
+          "maxLength": 128
+        },
+        "userName": {
+          "type": "string",
+          "description": "Name of inquirer",
+          "maxLength": 100
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Email for inquiry reply",
+          "maxLength": 120
+        },
+        "patternId": {
+          "type": "string",
+          "description": "Associated pattern specimen ID",
+          "maxLength": 64
+        },
+        "patternName": {
+          "type": "string",
+          "description": "Associated pattern name",
+          "maxLength": 120
+        },
+        "projectType": {
+          "type": "string",
+          "description": "Commercial, Fashion, Interior, or Custom",
+          "maxLength": 80
+        },
+        "message": {
+          "type": "string",
+          "description": "Details of bespoke or licensing inquiry",
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of inquiry (pending, reviewed, archived)",
+          "maxLength": 30
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Submission timestamp"
+        }
+      },
+      "required": ["id", "userId", "userName", "userEmail", "message", "status", "createdAt"]
+    },
+    "ChatConversation": {
+      "title": "ChatConversation",
+      "description": "Gemini AI Studio assistant conversation thread",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Conversation ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "User UID who owns this chat",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "description": "Conversation summary topic",
+          "maxLength": 150
+        },
+        "lastMessage": {
+          "type": "string",
+          "description": "Snippet of last message",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last message timestamp"
+        }
+      },
+      "required": ["id", "userId", "title", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Single message inside an AI chat conversation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Message ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "User UID",
+          "maxLength": 128
+        },
+        "conversationId": {
+          "type": "string",
+          "description": "Parent conversation ID",
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "description": "user or assistant",
+          "maxLength": 20
+        },
+        "content": {
+          "type": "string",
+          "description": "Text message content",
+          "maxLength": 5000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Message creation timestamp"
+        }
+      },
+      "required": ["id", "userId", "conversationId", "role", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile document keyed by auth UID"
+    },
+    "/users/{userId}/favorites/{favoriteId}": {
+      "schema": "PatternFavorite",
+      "description": "Subcollection of favorited patterns for a specific user"
+    },
+    "/users/{userId}/conversations/{conversationId}": {
+      "schema": "ChatConversation",
+      "description": "Subcollection of AI chat conversations for a specific user"
+    },
+    "/users/{userId}/conversations/{conversationId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Subcollection of messages inside a user chat conversation"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Licensing and bespoke custom inquiries submitted by users"
+    }
+  }
+}

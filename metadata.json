@@ -1,0 +1,8 @@
+{
+  "name": "KAT-MADE — HYPNO CHROME GARDEN",
+  "description": "Surreal surface design, liquid-chrome botanicals, and high-voltage pattern architecture by Kathleen Raft.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
